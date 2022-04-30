@@ -7,7 +7,7 @@ from keys import TOKEN
 intents = discord.Intents.default()
 intents.members = True
 
-client = commands.Bot(command_prefix = 'T!', intents=intents)
+client = commands.Bot(command_prefix = 't/', intents=intents)
 
 @client.event
 async def on_ready():
@@ -40,7 +40,7 @@ async def lud(ctx):
     else:
         await ctx.send('')
 
-@client.command(pass_context = True)
+@client.command()
 async def join(ctx):
     if(ctx.author.voice):
         channel = ctx.message.author.voice.channel
@@ -48,11 +48,16 @@ async def join(ctx):
     else:
         await ctx.send('You need to be in a voice channel to run this command.')
 
-@client.command(pass_context = True)
+@client.command()
 async def leave(ctx):
     if(ctx.voice_client):
         await ctx.guild.voice_client.disconnect()
     else:
         await ctx.send('I am not in a voice channel.')
+
+@client.command()
+async def random(ctx):
+    await ctx.send(ctx.author)
+    await voice.edit(ctx.author, reason="None", mute=True)
 
 client.run(TOKEN)
