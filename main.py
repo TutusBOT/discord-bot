@@ -1,11 +1,10 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import has_permissions, MissingPermissions
-import random
+import nextcord
+from nextcord.ext import commands
+from nextcord.ext.commands import has_permissions, MissingPermissions
 import time
 from keys import TOKEN
 
-intents = discord.Intents.default()
+intents = nextcord.Intents.default()
 intents.members = True
 
 client = commands.Bot(command_prefix = 't!', intents=intents)
@@ -63,24 +62,24 @@ async def random(ctx):
 
 @client.command()
 @has_permissions(kick_members=True)
-async def kick(ctx, member: discord.Member, *, reason=None):
+async def kick(ctx, member: nextcord.Member, *, reason=None):
     await member.kick(reason=reason)
     await ctx.send(f'User {member} has been kicked')
 
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You don't have permission to kick")
+        await ctx.send("You don't have permission to kick people!")
 
 @client.command()
 @has_permissions(ban_members=True)
-async def ban(ctx, member: discord.Member, *, reason=None):
+async def ban(ctx, member: nextcord.Member, *, reason=None):
     await member.ban(reason=reason)
     await ctx.send(f'User {member} has been banned')
 
 @kick.error
 async def ban_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You don't have permission to ban")
+        await ctx.send("You don't have permission to ban people!")
 
 client.run(TOKEN)
