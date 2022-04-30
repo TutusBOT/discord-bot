@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import has_permissions, MissingPermissions
 import random
 import time
 from keys import TOKEN
@@ -7,7 +8,7 @@ from keys import TOKEN
 intents = discord.Intents.default()
 intents.members = True
 
-client = commands.Bot(command_prefix = 't/', intents=intents)
+client = commands.Bot(command_prefix = 't!', intents=intents)
 
 @client.event
 async def on_ready():
@@ -59,5 +60,27 @@ async def leave(ctx):
 async def random(ctx):
     await ctx.send(ctx.author)
     await voice.edit(ctx.author, reason="None", mute=True)
+
+@client.command()
+@has_permissions(kick_members=True)
+async def kick(ctx, member: discord.Member, *, reason=None):
+    await member.kick(reason=reason)
+    await ctx.send(f'User {member} has been kicked')
+
+@kick.error
+async def kick_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permission to kick")
+
+@client.command()
+@has_permissions(ban_members=True)
+async def ban(ctx, member: discord.Member, *, reason=None):
+    await member.ban(reason=reason)
+    await ctx.send(f'User {member} has been banned')
+
+@kick.error
+async def ban_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permission to ban")
 
 client.run(TOKEN)
